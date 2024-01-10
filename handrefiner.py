@@ -38,6 +38,7 @@ import random
 from pathlib import Path
 from preprocessor.meshgraphormer import MeshGraphormerMediapipe
 import ast
+import torch.nn.functional as F
 
 transform = transforms.Compose([           
                     transforms.ToTensor(),
@@ -216,7 +217,7 @@ for file_info in inputs:
 
         x = torch.stack([torch.tensor(source) for _ in range(num_samples)], dim=0).to("cuda")
         z = model.get_first_stage_encoding(model.encode_first_stage(x))
-
+        
         cats = torch.cat([mask, masked_image], dim=1)
 
         hint = hint[
@@ -347,5 +348,4 @@ for file_info in inputs:
             os.path.join(args.out_dir, "{}_{}.jpg".format(file_name_raw, gen_count)), cv2.cvtColor(x_samples[0], cv2.COLOR_RGB2BGR)
             )
             gen_count += 1
-
 
